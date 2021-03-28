@@ -52,28 +52,33 @@ class ListAPIview2(ListAPIviewmixins,View):
 class SerailizedListview(View):
     def get(self,request,*args,**kwargs):
         qs = UpdateImage.objects.all()
-        data = serialize('json',qs,fields=('user','content'))
+        # data = serialize('json',qs,fields=('user','content'))
         # data = {
         #     'user':obj.user.username,
         #     'content':obj.content
 
         # }
         # json_data = json.dumps(data)
-        json_data = data
+        # json_data = data
+        json_data = UpdateImage.objects.all().serialize() #model manager
         return HttpResponse(json_data,content_type='application/json')
         # return self.render_to_json_response(data)
 class SerailizedDetailview(View):
     def get(self,request,*args,**kwargs):
         obj = UpdateImage.objects.get(id=1)
-        data = serialize('json',[obj,],fields=('user,content'))
+        # data = serialize('json',[obj,],fields=('user,content'))
         # data = {
         #     'user':obj.user.username,
         #     'content':obj.content
 
         # }
-        json_data = json.dumps(data)
-        json_data = data
+        # json_data = json.dumps(data)
+        # json_data = data
+        json_data = obj.serialize()
         return HttpResponse(json_data,content_type='application/json')
         # return self.render_to_json_response(data)
+
+
+
 
 
