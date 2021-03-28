@@ -5,4 +5,4 @@ from .models import UpdateImage
 
 @admin.register(UpdateImage)
 class UpdateImageAdmin(admin.ModelAdmin):
-    list_display = ['user','updated','timestamp']
+    list_display = ['user','content','updated','timestamp']
