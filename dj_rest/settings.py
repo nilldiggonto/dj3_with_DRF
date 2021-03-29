@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'crud_app',
     'rest_framework',
     'rest_app',
+    'board',
 ]
 
 MIDDLEWARE = [
