@@ -81,15 +81,21 @@ class StatusListCreateAPIView(mixins.CreateModelMixin,generics.ListAPIView):
     def post(self,request,*args,**kwargs):
         return self.create(request,*args,**kwargs)
 
-class StatusRetrieveUpdateDeleteAPIView(mixins.DestroyModelMixin,mixins.UpdateModelMixin,generics.RetrieveAPIView):
+# class StatusRetrieveUpdateDeleteAPIView(mixins.DestroyModelMixin,mixins.UpdateModelMixin,generics.RetrieveAPIView):
+class StatusRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Status.objects.all()
     serializer_class = StatusSerializer
+    
+#mixins
+    # def put(self,request,*args,**kwargs):
+    #     return self.update(request,*args,**kwargs)
 
-    def put(self,request,*args,**kwargs):
-        return self.update(request,*args,**kwargs)
+    
+    # def patch(self,request,*args,**kwargs):
+    #     return self.update(request,*args,**kwargs)
 
-    def delete(self,request,*args,**kwargs):
-        return self.destroy(request,*args,**kwargs)
+    # def delete(self,request,*args,**kwargs):
+    #     return self.destroy(request,*args,**kwargs)
 
 
 
