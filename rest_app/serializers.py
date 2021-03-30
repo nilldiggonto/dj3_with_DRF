@@ -17,6 +17,7 @@ class StatusSerializer(serializers.ModelSerializer):
         image = data.get('iamge',None)
         if content is None and image is None:
             raise serializers.ValidationError('Make sure one field is filled')
+        return data
 
 
 ### 

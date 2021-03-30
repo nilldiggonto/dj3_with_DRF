@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework import generics
 
 # Create your views here.
-class StatusListSearchAPIView(APIView):
+class StatusListAPIView(APIView):
     
     # pass
     def get(self,request,format=None):
@@ -23,7 +23,7 @@ class StatusListSearchAPIView(APIView):
     #     return Response(serializer.data)
 
 #generic LIST VIEW
-class StatusListAPIView(generics.ListAPIView):
+class StatusListSearchAPIView(generics.ListAPIView):
 
     queryset = Status.objects.all()
     serializer_class = StatusSerializer
@@ -34,5 +34,11 @@ class StatusListAPIView(generics.ListAPIView):
         if query is not None:
             qs = qs.filter(content__icontains=query)
         return qs
+
+#generics CREATE VIEW
+class StatusCreateAPIView(generics.CreateAPIView):
+    queryset = Status.objects.all()
+    serializer_class = StatusSerializer
+    
 
 
