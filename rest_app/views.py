@@ -39,6 +39,21 @@ class StatusListSearchAPIView(generics.ListAPIView):
 class StatusCreateAPIView(generics.CreateAPIView):
     queryset = Status.objects.all()
     serializer_class = StatusSerializer
-    
+
+    def perform_create(self,serializer):
+        serializer.save(user =self.request.user)
+
+#generic Detail View
+class StatusDetailAPIView(generics.RetrieveAPIView):
+    lookup_field = 'id' #slug
+    queryset = Status.objects.all()
+    serializer_class = StatusSerializer
+
+    #### another way to lookup
+    # def get_object(self,*args,**kwargs):
+    #     kwargs = self.kwargs
+    #     kw_id = kwargs.get('id')
+    #     return Status.objects.get(id=kw_id)
+
 
 
