@@ -8,7 +8,16 @@ from rest_framework import generics,mixins
 
 
 from django.shortcuts import get_object_or_404
+import json
 # from rest_framework import 
+
+def is_json(json_data):
+    try:
+        real_json = json.loads(json_data)
+        is_valid = True
+    except ValueError:
+        is_valid = False
+    return is_valid
 # Create your views here.
 class StatusListAPIView(APIView):
     
@@ -106,6 +115,7 @@ class StatusCrudAPIView(mixins.RetrieveModelMixin,mixins.CreateModelMixin,mixins
                         mixins.UpdateModelMixin,generics.ListAPIView):
 
                         serializer_class = StatusSerializer
+                        passed_id = None
 
                         #list view
                         def get_queryset(self):
@@ -120,7 +130,7 @@ class StatusCrudAPIView(mixins.RetrieveModelMixin,mixins.CreateModelMixin,mixins
                         
                         def get_object(self):
                             request = self.request
-                            passed_id = request.GET.get('id',None)
+                            passed_id = request.GET.get('id',None) or self.passed_id
                             queryset = self.get_queryset()
                             obj = None
                             if passed_id is not None:
@@ -129,7 +139,16 @@ class StatusCrudAPIView(mixins.RetrieveModelMixin,mixins.CreateModelMixin,mixins
                             return obj
                         
                         def get(self,request,*args,**kwargs):
-                            passed_id = request.GET.get('id',None)
+                            url_passed_id = request.GET.get('id',None)
+                            json_data = {}
+                            body_ = request.body
+                            if is_json(body_):
+                                json_data = json.loads(request.body)
+
+                            # json_data = json.loads(request.body)
+                            json_passed_id = json_data.get('id',None)
+                            passed_id = url_passed_id or json_passed_id or None
+                            self.passed_id = passed_id
                             if passed_id is not None:
                                 return self.retrieve(request,*args,**kwargs)
                             return super().get(request,*args,**kwargs)
@@ -143,6 +162,12 @@ class StatusCrudAPIView(mixins.RetrieveModelMixin,mixins.CreateModelMixin,mixins
 
                         def patch(self,request,*args,**kwargs):
                             return self.update(request,*args,**kwargs)
+
+                        def perform_destroy(self, instance):
+                            if instance is not None:
+                                return instance.delete()
+                            else:
+                                return None 
 
                         def delete(self,request,*args,**kwargs):
                             return self.destroy(request,*args,**kwargs)
