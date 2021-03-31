@@ -5,6 +5,9 @@ from .serializers import StatusSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics,mixins
+
+
+from django.shortcuts import get_object_or_404
 # from rest_framework import 
 # Create your views here.
 class StatusListAPIView(APIView):
@@ -96,6 +99,54 @@ class StatusRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
 
     # def delete(self,request,*args,**kwargs):
     #     return self.destroy(request,*args,**kwargs)
+
+
+#Single API View TO DO ALL CRUD
+class StatusCrudAPIView(mixins.RetrieveModelMixin,mixins.CreateModelMixin,mixins.DestroyModelMixin,
+                        mixins.UpdateModelMixin,generics.ListAPIView):
+
+                        serializer_class = StatusSerializer
+
+                        #list view
+                        def get_queryset(self):
+                                request = self.request
+                                qs = Status.objects.all()
+                                query = self.request.GET.get('q')
+                                if query is not None:
+                                    qs = qs.filter(content__icontains=query)
+                                return qs
+
+                        # retrive view
+                        
+                        def get_object(self):
+                            request = self.request
+                            passed_id = request.GET.get('id',None)
+                            queryset = self.get_queryset()
+                            obj = None
+                            if passed_id is not None:
+                                obj = get_object_or_404(queryset,id=passed_id)
+                                self.check_object_permissions(request,obj)
+                            return obj
+                        
+                        def get(self,request,*args,**kwargs):
+                            passed_id = request.GET.get('id',None)
+                            if passed_id is not None:
+                                return self.retrieve(request,*args,**kwargs)
+                            return super().get(request,*args,**kwargs)
+
+                        #post view
+                        def post(self,request,*args,**kwargs):
+                            return self.create(request,*args,**kwargs)
+
+                        def put(self,request,*args,**kwargs):
+                            return self.update(request,*args,**kwargs)
+
+                        def patch(self,request,*args,**kwargs):
+                            return self.update(request,*args,**kwargs)
+
+                        def delete(self,request,*args,**kwargs):
+                            return self.destroy(request,*args,**kwargs)
+
 
 
 
