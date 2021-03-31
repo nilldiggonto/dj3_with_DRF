@@ -6,3 +6,8 @@ class SprintSerializer(serializers.ModelSerializer):
         model = Sprint
         fields = ['id','name','description','endtime']
         
+
+
+#creating custom mixins with DRF
+class DefaultMixins(object):
+    pass
