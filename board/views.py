@@ -33,3 +33,6 @@ class UserViewSet(DefaultMixins,viewsets.ReadOnlyModelViewSet):
     lookup_url_kwarg = User.USERNAME_FIELD
     queryset = User.objects.order_by(User.USERNAME_FIELD)
     serializer_class = UserSerializer
+
+
+    #do the router test
