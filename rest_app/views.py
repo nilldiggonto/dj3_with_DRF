@@ -155,9 +155,21 @@ class StatusCrudAPIView(mixins.RetrieveModelMixin,mixins.CreateModelMixin,mixins
 
                         #post view
                         def post(self,request,*args,**kwargs):
+                            
                             return self.create(request,*args,**kwargs)
 
                         def put(self,request,*args,**kwargs):
+                            url_passed_id = request.GET.get('id',None)
+                            json_data = {}
+                            body_ = request.body
+                            if is_json(body_):
+                                json_data = json.loads(request.body)
+
+                            # json_data = json.loads(request.body)
+                            json_passed_id = json_data.get('id',None)
+                            requested_id = request.data.get('id')
+                            passed_id = url_passed_id or json_passed_id or requested_id or None
+                            self.passed_id = passed_id
                             return self.update(request,*args,**kwargs)
 
                         def patch(self,request,*args,**kwargs):
@@ -171,6 +183,24 @@ class StatusCrudAPIView(mixins.RetrieveModelMixin,mixins.CreateModelMixin,mixins
 
                         def delete(self,request,*args,**kwargs):
                             return self.destroy(request,*args,**kwargs)
+
+######## Status new detail view
+class StatusNewDetailAPIView(mixins.UpdateModelMixin,mixins.DestroyModelMixin,generics.RetrieveAPIView):
+    permission_classes = []
+    authentications_classes = []
+    serializer_class = StatusSerializer
+    queryset = Status.objects.all()
+    lookup_field = 'id'
+
+    def put(self,request,*args,**kwargs):
+        return self.update(request,*args,**kwargs)
+
+    def patch(self,request,*args,**kwargs):
+        return self.update(request,*args,**kwargs)
+
+    def delete(self,request,*args,**kwargs):
+        return self.update(request,*args,**kwargs)
+        
 
 
 
