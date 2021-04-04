@@ -4,7 +4,8 @@ from .serializers import StatusSerializer
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import generics,mixins
+from rest_framework import generics,mixins,permissions
+from rest_framework.authentication import SessionAuthentication
 
 
 from django.shortcuts import get_object_or_404
@@ -80,10 +81,14 @@ class StatusDeleteAPIView(generics.DestroyAPIView):
 
 ####  MIXINS ############## ############
 class StatusListCreateAPIView(mixins.CreateModelMixin,generics.ListAPIView):
+
     serializer_class = StatusSerializer
     queryset = Status.objects.all()
+    authentication_classes = (SessionAuthentication,)
+    permission_classes =  [permissions.IsAuthenticated,]
 
     def get_queryset(self):
+        print(self.request.user)
         qs = Status.objects.all()
         query = self.request.GET.get('q')
         if query is not None:
@@ -92,6 +97,9 @@ class StatusListCreateAPIView(mixins.CreateModelMixin,generics.ListAPIView):
 
     def post(self,request,*args,**kwargs):
         return self.create(request,*args,**kwargs)
+
+    def perform_create(self,serializer):
+        serializer.save(user=self.request.user)
 
 # class StatusRetrieveUpdateDeleteAPIView(mixins.DestroyModelMixin,mixins.UpdateModelMixin,generics.RetrieveAPIView):
 class StatusRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
