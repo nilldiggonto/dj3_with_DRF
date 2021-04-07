@@ -9,6 +9,9 @@ from django.conf import settings
 from django.utils import timezone
 import datetime
 
+from .serializers import UserRegistrationSerializer
+from rest_framework import generics
+
 from rest_framework_jwt.settings import api_settings
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -96,3 +99,11 @@ class RegisterView(APIView):
             return Response({'detail':'what the hell is that'})
         except:
             return Response({'status':'not ok'})
+
+
+
+#with serializer
+class RegisterAPIView(generics.CreateAPIView):
+    queryst = User.objects.all()
+    serializer_class = UserRegistrationSerializer
+    permission_classes = [permissions.AllowAny,]
