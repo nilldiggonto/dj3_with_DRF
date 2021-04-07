@@ -54,7 +54,45 @@ class AuthView(APIView):
                 print(user)
                 payload = jwt_payload_handler(user)
                 token = jwt_encode_handler(payload)
-                print(token)
+                # print(token)
                 response = jwt_response_payload_handler(token,user,request=request)
                 return Response(response)
         return Response({'detail':'wrong info'})
+
+
+#register view
+class RegisterView(APIView):
+    # autentication_classes = []
+    permission_classes = [permissions.AllowAny,]
+    def post(self,request,*args,**kwargs):
+        if request.user.is_authenticated:
+            return Response({'status':'You are already authenticated'},status=400)
+        data = request.data
+        ## required fields
+        try:
+            username    = data.get('username')
+            email       = data.get('email')
+            password    = data.get('password')     
+            password2   = data.get('password2')
+            ##
+            # user = authenticate(username=username,password=password)
+
+            qs = User.objects.filter(Q(username__iexact=username)|Q(email__iexact=username)).distinct()
+            if password != password2:
+                return Response({'detail':'password should match'})
+            if qs.exists():
+                return Response({'detail':'User Already Exists'})
+            else:
+                user = User.objects.create(username=username,email=email)
+                user.set_password(password)
+                user.save()
+                payload = jwt_payload_handler(user)
+                token = jwt_encode_handler(payload)
+                # print(token)
+                response = jwt_response_payload_handler(token,user,request=request)
+                return Response(response)
+
+        
+            return Response({'detail':'what the hell is that'})
+        except:
+            return Response({'status':'not ok'})
