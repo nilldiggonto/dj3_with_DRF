@@ -11,6 +11,7 @@ from rest_framework import permissions
 #         return not blocked
 
 class AnonPermissionOnly(permissions.BasePermission):
+    message = 'You are already authenticated.'
     def has_permission(self, request, view):
         
         return not request.user.is_authenticated
@@ -31,4 +32,6 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return True
 
         # Instance must have an attribute named `owner`.
+        # if obj.user == request.user:
+        #     return True
         return obj.owner == request.user

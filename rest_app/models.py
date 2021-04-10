@@ -26,3 +26,6 @@ class Status(models.Model):
 
     # class Meta:
     #     verb
+    @property
+    def owner(self):
+        return self.user

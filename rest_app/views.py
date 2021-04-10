@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics,mixins,permissions
 from rest_framework.authentication import SessionAuthentication
+from account_app.permissions import IsOwnerOrReadOnly
 
 
 from django.shortcuts import get_object_or_404
@@ -101,8 +102,8 @@ class StatusListCreateAPIView(mixins.CreateModelMixin,generics.ListAPIView):
 
     serializer_class = StatusSerializer
     queryset = Status.objects.all()
-    authentication_classes = (SessionAuthentication,)
-    permission_classes =  [permissions.IsAuthenticated,]
+    # authentication_classes = (SessionAuthentication,)
+    permission_classes =  [permissions.IsAuthenticatedOrReadOnly,]
 
     def get_queryset(self):
         print(self.request.user)
@@ -211,7 +212,7 @@ class StatusCrudAPIView(mixins.RetrieveModelMixin,mixins.CreateModelMixin,mixins
 
 ######## Status new detail view
 class StatusNewDetailAPIView(mixins.UpdateModelMixin,mixins.DestroyModelMixin,generics.RetrieveAPIView):
-    permission_classes = []
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
     authentications_classes = []
     serializer_class = StatusSerializer
     queryset = Status.objects.all()
