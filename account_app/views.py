@@ -17,6 +17,9 @@ jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 
+from .permissions import AnonPermissionOnly
+
+
 
 # Create your views here.
 
@@ -38,7 +41,7 @@ User = get_user_model()
 
 class AuthView(APIView):
     # autentication_classes = []
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [AnonPermissionOnly,]
     def post(self,request,*args,**kwargs):
         if request.user.is_authenticated:
             return Response({'status':'You are already authenticated'},status=400)
@@ -106,7 +109,7 @@ class RegisterView(APIView):
 class RegisterAPIView(generics.CreateAPIView):
     queryst = User.objects.all()
     serializer_class = UserRegistrationSerializer
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [AnonPermissionOnly,]
 
     def get_serializer_context(self,*args,**kwargs):
         return {'request':self.request}
