@@ -24,6 +24,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
     Object-level permission to only allow owners of an object to edit it.
     Assumes the model instance has an `owner` attribute.
     """
+    message = 'You are not the owner.'
 
     def has_object_permission(self, request, view, obj):
         # Read permissions are allowed to any request,
