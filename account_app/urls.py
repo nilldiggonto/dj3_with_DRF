@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,include
 from django.contrib import admin
 from rest_framework_jwt.views import refresh_jwt_token,obtain_jwt_token
 
@@ -11,6 +11,8 @@ urlpatterns = [
 
     path('jwt/',obtain_jwt_token),
     path('jwt/refresh/',refresh_jwt_token),
+
+    path('user/',include('user_info.urls')),
 
     path('user/detail/<str:username>/',UserDetailAPIView.as_view(),name='auth-app-user-detail'),
 ]
