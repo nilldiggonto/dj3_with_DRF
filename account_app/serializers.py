@@ -5,6 +5,8 @@ from django.utils import timezone
 import datetime
 
 from rest_framework_jwt.settings import api_settings
+# from rest_app.serializers import StatusSerializer
+
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -32,6 +34,20 @@ class UserPublicSerializer(serializers.ModelSerializer):
         ]
     def get_uri(self,obj):
         return 'username/url/{id}'.format(id=obj.id)
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    uri = serializers.SerializerMethodField(read_only=True)
+    status_list = serializers.SerializerMethodField(read_only=True)
+    class Meta:
+        model = User
+        fields = [
+            'id','username','uri','status_list'
+        ]
+    def get_uri(self,obj):
+        return 'username/url/{id}'.format(id=obj.id)
+    def get_status_list(self,obj):
+        return 'oj'
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)

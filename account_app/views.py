@@ -9,7 +9,7 @@ from django.conf import settings
 from django.utils import timezone
 import datetime
 
-from .serializers import UserRegistrationSerializer
+from .serializers import UserRegistrationSerializer,UserDetailSerializer
 from rest_framework import generics
 
 from rest_framework_jwt.settings import api_settings
@@ -113,3 +113,11 @@ class RegisterAPIView(generics.CreateAPIView):
 
     def get_serializer_context(self,*args,**kwargs):
         return {'request':self.request}
+
+
+########### USER DETAIL VIEW
+class UserDetailAPIView(generics.RetrieveAPIView):
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    serializer_class = UserDetailSerializer
+    queryset = User.objects.filter(is_active=True)
+    lookup_field = 'username'
