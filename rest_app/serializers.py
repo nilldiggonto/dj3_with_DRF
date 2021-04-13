@@ -3,6 +3,16 @@ from .models import Status
 from account_app.serializers import UserPublicSerializer
 
 
+class StatusLineUserSerailizer(serializers.ModelSerializer):
+    uri = serializers.SerializerMethodField(read_only=True)
+    class Meta:
+        model = Status
+        fields = ['id','content','image','uri']
+        # read_only_fields =['user']
+
+    def get_uri(self,obj):
+        return 'url/url/{id}'.format(id=obj.id)
+
 class StatusSerializer(serializers.ModelSerializer):
     user = UserPublicSerializer(read_only=True)
     uri = serializers.SerializerMethodField(read_only=True)
