@@ -1,12 +1,19 @@
 from rest_framework import serializers
 from .models import Status
+from account_app.serializers import UserPublicSerializer
+
 
 class StatusSerializer(serializers.ModelSerializer):
+    user = UserPublicSerializer(read_only=True)
+    uri = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Status
-        fields = ['id','user','content','image']
+        fields = ['id','user','content','image','uri']
         read_only_fields = ['user',]
+    
+    def get_uri(self,obj):
+        return 'drf/{id}/'.format(id=obj.id)
 
     # def validate_content(self,value):
     #     if len(value)>100:

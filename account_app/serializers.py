@@ -19,6 +19,20 @@ def jwt_response_payload_handler(token,user=None,request=None):
         'expires': timezone.now() + expire_delta - datetime.timedelta(seconds=3000)
     }
 
+
+
+
+## Serializer more user-friendly
+class UserPublicSerializer(serializers.ModelSerializer):
+    uri = serializers.SerializerMethodField(read_only=True)
+    class Meta:
+        model = User
+        fields = [
+            'id','username','uri'
+        ]
+    def get_uri(self,obj):
+        return 'username/url/{id}'.format(id=obj.id)
+
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)

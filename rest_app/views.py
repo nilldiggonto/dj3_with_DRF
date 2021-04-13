@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework import generics,mixins,permissions
 from rest_framework.authentication import SessionAuthentication
 from account_app.permissions import IsOwnerOrReadOnly
-
+from account_app.serializers import UserPublicSerializer
 
 from django.shortcuts import get_object_or_404
 import json
