@@ -58,6 +58,8 @@ class StatusListSearchAPIView(generics.ListAPIView):
 
     queryset = Status.objects.all()
     serializer_class = StatusSerializer
+    search_fields = ('user__username','content')
+    ordering_fields = ('user__username','timestamp')
 
     def get_queryset(self):
         qs = Status.objects.all()
